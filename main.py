@@ -262,6 +262,5 @@ def delete_comment(comment_id, post_id):
     db.session.commit()
     return redirect(url_for("show_post", index= post_id))
 
-port = int(os.environ.get('PORT', 33507))
 if __name__ == "__main__":
-    app.run(port= port, host='0.0.0.0',debug=True)
+    app.run(debug=True)
