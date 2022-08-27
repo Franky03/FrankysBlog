@@ -1,0 +1,88 @@
+{% include "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('{{post.img_url}}')">
+	<div class="overlay"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-md-10 mx-auto">
+				<div class="post-heading">
+					<h1>{{post.title}}</h1>
+					<h2 class="subheading">{{post.subtitle}}</h2>
+					<span class="meta">Posted by
+            
+              {{post.author.name}}
+              
+              on {{post.date}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>
+            {{ post.body | safe }}
+          </p>
+           <hr>
+           {% if current_user.is_authenticated and current_user.id==1 %}
+              <div class="clearfix">
+                <a class="btn btn-primary float-right" href="{{url_for('edit_post', post_id=post.id)}}">Edit Post</a>
+              </div>
+            {% endif %}
+            
+            <div class="col-lg-12 col-md-10 mx-auto comment">
+
+              {% if current_user.is_authenticated %}
+                {{ckeditor.load()}}
+                {{ ckeditor.config(name='comment') }}
+                {{ wtf.quick_form(form, button_map={"submit": "primary"}) }}
+              {% else %}
+                <h4 style="text-align: center;">You need to 
+                  <a href="{{ url_for('login')}}"> login </a>
+                  or
+                  <a href="{{ url_for('register')}}"> register </a>
+                  to comment
+                </h4>
+              {% endif %}
+
+              <ul class="commentList">
+                {% for comment in post.comments %}
+                  <li>
+                      <div class="commenterImage">
+                        <img src="{{ comment.comment_author.email | gravatar }}"/>
+                      </div>
+                      <div class="commentText">
+                        <!-- Nesse span está sendo ligado as 3 tables, primeiro é pego os comments do BlogPost,
+                        depois é pego o autor do comentário do Comment e o nome desse autor que está no User.
+                        Que incrivel! -->
+                        <span class="date sub-text">{{ comment.comment_author.name }}</span>
+                        {{ comment.text|safe }}
+                        {% if current_user.is_authenticated and current_user.id==1 or current_user.id== comment.comment_author.id %}
+                          <span>
+                            <a style="position: relative; left: 620px; bottom: 55px;" href="{{ url_for('delete_comment', post_id= post.id, comment_id= comment.id ) }}"><i class="fa-solid fa-trash"></i></a>
+                          </span>
+                        {% endif %}
+
+                      </div>
+
+                  </li>
+                  
+                {% endfor %}
+              </ul>
+            
+            </div>
+          </div>
+
+
+      </div>
+    </div>
+  </article>
+
+  <hr>
+{% include "footer.html" %}
