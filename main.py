@@ -115,7 +115,7 @@ def send_email(name, email, phone, text):
 
 #ROUTES
 
-@app.route('/')
+@app.route('/', methods= ["GET"])
 def get_all_posts():
     posts= db.session.query(BlogPost).all()
     return render_template("index.html", all_posts=posts)
