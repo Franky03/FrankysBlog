@@ -55,7 +55,7 @@
                 {% for comment in post.comments %}
                   <li>
                       <div class="commenterImage">
-                        <img src="{{ comment.comment_author.email | gravatar }}"/>
+                        <img height="30px" width="30px" style="border-radius: 50%; vertical-align: middle; border-style: none;" src="{{ comment.comment_author.email | gravatar }}"/>
                       </div>
                       <div class="commentText">
                         <!-- Nesse span está sendo ligado as 3 tables, primeiro é pego os comments do BlogPost,
